@@ -9,6 +9,9 @@
     html, body {
       padding: 20px 0;
     }
+    #detailsView {
+      display: none;
+    }
     #details img {
       margin: 0 0 15px 0;
     }
@@ -19,10 +22,10 @@
   </style>
 </head>
 <body>
-  <div class="container" ng-controller="ctr-1">
+  <div class="container" ng-controller="repoCtrl">
     <div class="row">
       <div class="col-xs-12">
-        <h1>Address Book <small>{{title}}</small></h1>
+        <h1>Address Book <small></small></h1>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="table-responsive">
@@ -36,6 +39,12 @@
               </tr>
             </thead>
             <tbody>
+              <tr ng-repeat="person in people">
+                <td><strong>{{person.id}}</strong></td>
+                <td>{{person.first_name}}</td>
+                <td>{{person.last_name}}</td>
+                <td><a class="btn btn-default" href="#" ng-click="ViewAllInfo(person.id)">View</a></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -45,10 +54,19 @@
           <div class="panel-heading">Detailed View</div>
           <div class="panel-body">
             <div id="details">
-              <p>
-                Click for Detailed Info
+              <p id="detailsInstr">
+                Click 'View' for Detailed Info
               </p>
+              <div id="detailsView">
+                <img src="{{details.avatar}}">
+                <h3>{{details.first_name}} {{details.last_name}}</h3>
+                <hr>
+                <h4>{{details.occupation}}</h4>
+                <p>{{details.phoneNum}}</p>
+                <p>{{details.address}}</p>
+              </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -57,7 +75,7 @@
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-  <script type="text/javascript" src="js/script.js"></script>
+  <!-- <script type="text/javascript" src="js/script.js"></script> -->
   <script type="text/javascript" src="js/angular.min.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
 
