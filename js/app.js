@@ -3,7 +3,12 @@ var app = angular.module('app', []);
 var bannerImage = document.getElementById('bannerImg');
 var result = document.getElementById('res');
 var img = document.getElementById('tableBanner');
+var addContact = document.getElementById('submitContact');
 var picCount = 0;
+var numContacts = 1;
+
+bannerImg.addEventListener('change', handleFileSelect, false);
+addContact.addEventListener('submit', handleAddContact, false);
 
 
 window.onload = function() { init() };
@@ -21,6 +26,20 @@ function init() {
   }
 }
 
+function handleAddContact(evt) {
+  var comma = ", "
+  var newContact = {
+    "id": numContacts++,
+    "first_name": addContact.firstName,
+    "last_name": addContact.lastName,
+    "address" : addContact.Address.value +comma+ addContact.City.value +comma+ addContact.State.value +' '+ addContact.Zip.value,
+    "phone": addContact.Phone.value.replace(/\D/g,''),
+    "occupation": addContact.Occupation.value
+  }
+  JSON.stringify(newContact);
+  console.log(newContact);
+}
+
 function handleFileSelect(evt) {
    var files = evt.target.files; // FileList object
 
@@ -32,7 +51,8 @@ function handleFileSelect(evt) {
      var reader = new FileReader();
      reader.onload = (function(theFile) {
        return function(e) {
-         localStorage.setItem(picCount++, e.target.result);
+         var randomKey = Math.random().toString(36).substr(2, 5);
+         localStorage.setItem(randomKey, e.target.result);
        };
      })(f);
 
@@ -40,8 +60,6 @@ function handleFileSelect(evt) {
      reader.readAsDataURL(f);
    }
  }
-
-bannerImg.addEventListener('change', handleFileSelect, false);
 
 app.controller('repoCtrl', function($scope, $http) {
 
@@ -54,6 +72,8 @@ app.controller('repoCtrl', function($scope, $http) {
       response.data.forEach(function(person) {
         person.first_name = $scope.Capitalize(person.first_name);
         person.last_name = $scope.Capitalize(person.last_name);
+        person.id = numContacts;
+        numContacts++;
       });
 
       $scope.people = response.data;
