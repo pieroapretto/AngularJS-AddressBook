@@ -1,5 +1,48 @@
 var app = angular.module('app', []);
 
+var bannerImage = document.getElementById('bannerImg');
+var result = document.getElementById('res');
+var img = document.getElementById('tableBanner');
+var picCount = 0;
+
+
+window.onload = function() { init() };
+
+function init() {
+  const keys = Object.keys(localStorage);
+  var i = keys.length;
+
+  while (i--) {
+     var profilePic = null;
+     var imageData = localStorage.getItem(keys[i]);
+     profilePic = document.createElement('div');
+     profilePic.innerHTML += ['<img class="thumb" src="', imageData,'" />'].join('');
+     result.insertBefore(profilePic, null);
+  }
+}
+
+function handleFileSelect(evt) {
+   var files = evt.target.files; // FileList object
+
+   for (var i = 0, f; f = files[i]; i++) {
+
+     // Only process image files.
+     if (!f.type.match('image.*')) { continue;}
+
+     var reader = new FileReader();
+     reader.onload = (function(theFile) {
+       return function(e) {
+         localStorage.setItem(picCount++, e.target.result);
+       };
+     })(f);
+
+     // Read in the image file as a data URL.
+     reader.readAsDataURL(f);
+   }
+ }
+
+bannerImg.addEventListener('change', handleFileSelect, false);
+
 app.controller('repoCtrl', function($scope, $http) {
 
   var mainURL = "https://reqres-api.herokuapp.com/api/users/";
