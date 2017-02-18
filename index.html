@@ -36,9 +36,29 @@
      background-color: #f5f5f5 !important;
      border-color: #ddd !important;
    }
-   #formManager {
-     display: none;
+   #thumbail {
+     width: 128px;
    }
+   input[type=text] {
+    font-size: 16px;
+    height: 30px;
+    text-decoration: none;
+    border: 0;
+    border-bottom: 1px solid #e6e6e6;
+    color: #737373;
+    outline: none;
+    background-color: transparent;
+    margin-bottom: 10px;
+    padding: 0px;
+   }
+   input[type=text]:focus {
+    outline: none;
+    background-color: none;
+    display: inline-block;
+   }
+   /*#formManager {
+     display: none;
+   }*/
   </style>
 </head>
 <body>
@@ -58,7 +78,7 @@
                   Click 'View' for Detailed Info
                 </p>
                 <div id="detailsView">
-                  <img src="{{details.avatar}}">
+                  <img id="thumbail" src="{{details.avatar}}">
                   <h3>{{details.first_name}} {{details.last_name}}</h3>
                   <hr>
                   <h4>{{details.occupation}}</h4>
@@ -76,32 +96,25 @@
                 <div class="panel-body">
                 <form name="submitContact" id="submitContact">
                 <label class="custom-file">
-                  <input name="Avatar" type="file" id="bannerImg" class="custom-file-input">
+                  <p>Photo</p>
+                  <input name="Avatar" type="file" id="bannerImg" class="custom-file-input"  placeholder=" Picture" required>
                   <span class="custom-file-control"></span>
                 </label>
-                <p>First Name</p>
-                  <input name="firstName" type="text" class="firstName" required>
+                  <input name="firstName" type="text" class="firstName"  placeholder=" First Name" required>
                 <br>
-                <p>Last Name</p>
-                  <input name="lastName" type="text" class="lastName" required>
+                  <input name="lastName" type="text" class="lastName"  placeholder=" Last Name" required>
                 <br>
-                <p>Relation</p>
-                  <input name="Occupation" type="text" class="Occupation" required>
+                  <input name="Occupation" type="text" class="Occupation"  placeholder=" Relationship" required>
                 <br>
-                <p>Phone</p>
-                  <input name="Phone" type="text" class="Phone" maxlength="14" required>
+                  <input name="Phone" type="text" class="Phone" maxlength="14" placeholder=" Phone" required>
                 <br>
-                <p>Street Address</p>
-                  <input name="Address" type="text" class="Address" required>
+                  <input name="Address" type="text" class="Address" placeholder=" Street" required>
                 <br>
-                <p>City</p>
-                  <input name="City" type="text" class="City" required>
+                  <input name="City" type="text" class="City" placeholder=" City" required>
                 <br>
-                <p>State</p>
-                  <input name="State" type="text" class="State" maxlength="12" required>
+                  <input name="State" type="text" class="State" maxlength="12" placeholder=" State" required>
                 <br>
-                <p>Zip</p>
-                  <input name="Zip" type="text" class="Zip" maxlength="5" required>
+                  <input name="Zip" type="text" class="Zip" maxlength="5" placeholder=" Zip" required>
                 <br>
                 <br>
                 <br>
@@ -127,10 +140,11 @@
               </thead>
               <tbody>
                 <tr ng-repeat="person in people">
-                  <td><strong>{{person.id}}</strong></td>
+                  <td><strong>{{person.Number}}</strong></td>
                   <td>{{person.first_name}}</td>
                   <td>{{person.last_name}}</td>
                   <td><a class="btn btn-default" href="#" ng-click="ViewAllInfo(person.id)">View</a></td>
+                  <!-- <td><a class="btn btn-default" href="#" ng-click="RemoveInfo(people.indexOf(person), person.id)">Remove</a></td> -->
                 </tr>
               </tbody>
             </table>

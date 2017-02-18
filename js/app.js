@@ -6,8 +6,11 @@ var img = document.getElementById('tableBanner');
 var addContact = document.getElementById('submitContact');
 var picCount = 0;
 var numContacts = 1;
+var avatarUrl = "";
+var localList = [];
+var DeletedList = JSON.parse(localStorage.getItem('deleted')) || [];
 
-bannerImg.addEventListener('change', handleFileSelect, false);
+bannerImg.addEventListener('change', handleFileUpload, false);
 addContact.addEventListener('submit', handleAddContact, false);
 
 
@@ -19,28 +22,41 @@ function init() {
 
   while (i--) {
      var profilePic = null;
-     var imageData = localStorage.getItem(keys[i]);
-     profilePic = document.createElement('div');
-     profilePic.innerHTML += ['<img class="thumb" src="', imageData,'" />'].join('');
-     result.insertBefore(profilePic, null);
+     if (keys[i] !== "deleted") {
+       localList.push(JSON.parse(localStorage.getItem(keys[i])));
+     }
   }
 }
 
 function handleAddContact(evt) {
   var comma = ", "
   var newContact = {
-    "id": numContacts++,
-    "first_name": addContact.firstName,
-    "last_name": addContact.lastName,
+    "id": Math.floor((Math.random() * 999999999) + 1),
+    "Number": numContacts++,
+    "first_name": addContact.firstName.value,
+    "last_name": addContact.lastName.value,
     "address" : addContact.Address.value +comma+ addContact.City.value +comma+ addContact.State.value +' '+ addContact.Zip.value,
     "phone": addContact.Phone.value.replace(/\D/g,''),
-    "occupation": addContact.Occupation.value
+    "occupation": addContact.Occupation.value,
+    "avatar": avatarUrl
   }
-  JSON.stringify(newContact);
-  console.log(newContact);
+
+  localStorage.setItem(newContact.id, JSON.stringify(newContact));
+  localList.push(newContact);
+  updateController(newContact);
+  addContact.reset();
 }
 
-function handleFileSelect(evt) {
+function updateController(newContact) {
+  var appElement = document.querySelector('[ng-app=app]');
+  var $scope = angular.element(appElement).scope();
+  $scope = $scope.$$childHead; // add this and it will work
+  $scope.$apply(function() {
+      $scope.people.push(newContact);
+  });
+}
+
+function handleFileUpload(evt) {
    var files = evt.target.files; // FileList object
 
    for (var i = 0, f; f = files[i]; i++) {
@@ -51,8 +67,9 @@ function handleFileSelect(evt) {
      var reader = new FileReader();
      reader.onload = (function(theFile) {
        return function(e) {
-         var randomKey = Math.random().toString(36).substr(2, 5);
-         localStorage.setItem(randomKey, e.target.result);
+         avatarUrl = e.target.result;
+      //    var randomKey = Math.random().toString(36).substr(2, 5);
+      //    localStorage.setItem(randomKey, avatarUrl);
        };
      })(f);
 
@@ -68,46 +85,76 @@ app.controller('repoCtrl', function($scope, $http) {
   $http.get(mainURL)
     .then(function successAll(response) {
 
+      var allContacts = response.data.concat(localList);
+
       //capitalize first letter of names being passed to $scope.people
-      response.data.forEach(function(person) {
-        person.first_name = $scope.Capitalize(person.first_name);
-        person.last_name = $scope.Capitalize(person.last_name);
-        person.id = numContacts;
-        numContacts++;
+      allContacts.forEach(function(person) {
+        if(DeletedList.indexOf(person.id) > -1) {
+          allContacts.splice(allContacts[person.id - 1], 1);
+        }
+        else {
+          person.first_name = $scope.Capitalize(person.first_name);
+          person.last_name = $scope.Capitalize(person.last_name);
+          person.Number = numContacts;
+          numContacts++;
+        }
       });
 
-      $scope.people = response.data;
+      $scope.people = allContacts;
+      console.log(allContacts);
 
     }, function errorAll(response) {
       console.log(response.statusText);
   });
 
   $scope.ViewAllInfo = function(personID) {
-    $http.get(mainURL + personID)
-      .then(function successOne(response){
-        $scope.details = response.data;
+    if (personID < 13) {
+      $http.get(mainURL + personID)
+        .then(function successOne(response){
+          $scope.ScrubData(response.data);
 
-        // convert 11 digit numberical value to phone number syntax
-        var rawPhoneNum = String($scope.details.phone);
-        $scope.details.phoneNum = rawPhoneNum[0] + "-" + rawPhoneNum.substring(1,4) + "-" +
-                                  rawPhoneNum.substring(4,7) + "-" + rawPhoneNum.substring(7);
+        }, function clickError(response) {
+          console.log(response.statusText);
+      });
+   }
+   else {
+     var obj = localList.filter(function (obj) { return obj.id === personID;})[0];
+     $scope.ScrubData(obj);
+   }
+  }
 
-        //capitalize first letter in JSON being passed through
-        $scope.details.first_name = $scope.Capitalize($scope.details.first_name);
-        $scope.details.last_name = $scope.Capitalize($scope.details.last_name);
-        $scope.details.occupation = $scope.Capitalize($scope.details.occupation);
+  $scope.ScrubData = function(details) {
 
-        //remove placeholder text in details DOM element and display detailed information
-        document.getElementById('detailsView').style.display = 'block';
-        var detailsInstr = document.getElementById('detailsInstr');
-        if(detailsInstr){ detailsInstr.parentNode.removeChild(detailsInstr)};
+    // convert 11 digit numberical value to phone number syntax
+    var rawPhoneNum = String(details.phone);
 
-      }, function clickError(response) {
-        console.log(response.statusText);
-    });
+    if(rawPhoneNum.length < 10) { rawPhoneNum.slice(1);}
+
+    details.phoneNum = rawPhoneNum.substring(0,3) + "-" +
+                       rawPhoneNum.substring(3,6) + "-" + rawPhoneNum.substring(6);
+
+    //capitalize first letter in JSON being passed through
+    details.first_name = $scope.Capitalize(details.first_name);
+    details.last_name = $scope.Capitalize(details.last_name);
+    details.occupation = $scope.Capitalize(details.occupation);
+
+    //remove placeholder text in details DOM element and display detailed information
+    document.getElementById('detailsView').style.display = 'block';
+    var detailsInstr = document.getElementById('detailsInstr');
+    if(detailsInstr){ detailsInstr.parentNode.removeChild(detailsInstr)};
+
+    $scope.details = details;
   }
 
   $scope.Capitalize = function(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  $scope.RemoveInfo = function(personIndex, personID) {
+    var voidContact = $scope.people[personIndex];
+    if(localStorage[personID]) { localStorage.removeItem(personID); }
+    DeletedList.push(voidContact.id);
+    localStorage.setItem('deleted', JSON.stringify(DeletedList));
+    $scope.people.splice(personIndex, 1);
   }
 });
