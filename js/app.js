@@ -19,7 +19,7 @@ function initLocalData() {
   while (i--) {
      var profilePic = null;
      if (keys[i] !== "deleted") {
-       localList.push(JSON.parse(localStorage.getItem(keys[i])));
+       localList.unshift(JSON.parse(localStorage.getItem(keys[i])));
      }
   }
 }
@@ -36,7 +36,7 @@ function handleAddContact(evt) {
   }
 
   localStorage.setItem(newContact.id, JSON.stringify(newContact));
-  localList.push(newContact);
+  localList.unshift(newContact);
   updateController(newContact);
   addContact.reset();
 }
@@ -46,7 +46,7 @@ function updateController(newContact) {
   var $scope = angular.element(appElement).scope();
   $scope = $scope.$$childHead;
   $scope.$apply(function() {
-      $scope.people.push(newContact);
+      $scope.people.unshift(newContact);
   });
 }
 
@@ -78,7 +78,7 @@ app.controller('repoCtrl', function($scope, $http) {
   $http.get(mainURL)
     .then(function successAll(response) {
       var filteredData = response.data.filter(function (obj) { return DeletedList.indexOf(obj.id) < 0;});
-      var allContacts = filteredData.concat(localList);
+      var allContacts = localList.concat(filteredData);
 
       //capitalize first letter of names being passed to $scope.people
       allContacts.forEach(function(person) {
@@ -143,7 +143,7 @@ app.controller('repoCtrl', function($scope, $http) {
     if(localStorage[personID]) { localStorage.removeItem(personID); }
 
     //if store externally, block obj from being passed to scope.
-    DeletedList.push(voidContact.id);
+    DeletedList.unshift(voidContact.id);
     localStorage.setItem('deleted', JSON.stringify(DeletedList));
     $scope.people.splice(personIndex, 1);
   }
