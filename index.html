@@ -28,39 +28,42 @@
           <br>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+
           <div id="formManager">
+
             <div class="panel panel-default dropdown">
-              <div class="panel-heading"><span>Search Contacts:  </span><input name="search" type="text" placeholder="search by name.." ng-model="searchText" ng-change="getFilteredContactList()" class="Address"></div>
+              <div class="panel-heading"><span>Filter Contacts:  </span><input name="search" type="text" placeholder="search by name.." ng-model="searchText" ng-change="getFilteredContactList()" class="Address"></div>
             </div>
+
             <div class="panel panel-default dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#"><div class="panel-heading">Add Contact <span class="caret"></span></div></a>
                 <div class="dropdown-menu">
                   <div class="panel-body">
                   <form name="submitContact" id="submitContact">
-                  <label class="custom-file">
-                    <p>Photo</p>
-                    <input name="Avatar" type="file" id="bannerImg" class="custom-file-input" required>
-                    <span class="custom-file-control"></span>
+                  <label class="btn btn-default btn-file">
+                    Add Image..<input name="Avatar" type="file" id="bannerImg" class="custom-file-input" style="display:none" required>
                   </label>
+                  <span id="fileSelected"></span>
+                  <br>
+                  <br>
                     <input name="firstName" type="text" class="firstName"  placeholder=" First Name" required>
                   <br>
                     <input name="lastName" type="text" class="lastName"  placeholder=" Last Name" required>
                   <br>
                     <input name="Occupation" type="text" class="Occupation"  placeholder=" Relationship" required>
                   <br>
-                    <input name="Phone" type="text" class="Phone" maxlength="14" placeholder=" Phone" required>
+                    <input name="Phone" type="text" class="Phone" pattern=".{9,14}" placeholder=" Phone" required>
                   <br>
                     <input name="Address" type="text" class="Address" placeholder=" Street" required>
                   <br>
                     <input name="City" type="text" class="City" placeholder=" City" required>
                   <br>
-                    <input name="State" type="text" class="State" maxlength="12" placeholder=" State" required>
+                    <input name="State" type="text" class="State" pattern=".{2,12}" placeholder=" State" required>
                   <br>
-                    <input name="Zip" type="text" class="Zip" maxlength="5" placeholder=" Zip" required>
+                    <input name="Zip" type="text" class="Zip" pattern=".{5,5}"placeholder=" Zip" required>
                   <br>
                   <br>
-                  <br>
-                  <input type="submit" value="Add Contact" class="button" id="submit">
+                  <input type="submit" value="Submit" class="button" id="submit">
                 </form>
                 </div>
               </div>

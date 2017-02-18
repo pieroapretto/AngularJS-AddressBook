@@ -6,3 +6,13 @@ $('.dropdown').on('show.bs.dropdown', function() {
 $('.dropdown').on('hide.bs.dropdown', function() {
   $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
 });
+
+//style img upload button
+$(document).on('change', ':file', function() {
+    label = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+    $('#fileSelected').html(label);
+});
+
+$(document).on('submit', function(){
+  $('#fileSelected').empty();
+});
