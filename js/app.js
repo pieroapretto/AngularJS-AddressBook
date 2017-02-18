@@ -1,22 +1,18 @@
 var app = angular.module('app', []);
 
-var bannerImage = document.getElementById('bannerImg');
-var result = document.getElementById('res');
+var bannerImg = document.getElementById('bannerImg');
 var img = document.getElementById('tableBanner');
 var addContact = document.getElementById('submitContact');
-var picCount = 0;
-var numContacts = 1;
 var avatarUrl = "";
 var localList = [];
-var DeletedList = JSON.parse(localStorage.getItem('deleted')) || [];
 
 bannerImg.addEventListener('change', handleFileUpload, false);
 addContact.addEventListener('submit', handleAddContact, false);
 
 
-window.onload = function() { init() };
+window.onload = function() { initLocalData() };
 
-function init() {
+function initLocalData() {
   const keys = Object.keys(localStorage);
   var i = keys.length;
 
@@ -29,13 +25,11 @@ function init() {
 }
 
 function handleAddContact(evt) {
-  var comma = ", "
   var newContact = {
-    "id": Math.floor((Math.random() * 999999999) + 1),
-    "Number": numContacts++,
+    "id": Math.floor(Math.random() * (999999 - 13)) + 13,
     "first_name": addContact.firstName.value,
     "last_name": addContact.lastName.value,
-    "address" : addContact.Address.value +comma+ addContact.City.value +comma+ addContact.State.value +' '+ addContact.Zip.value,
+    "address" : addContact.Address.value +", "+ addContact.City.value +", "+ addContact.State.value +" "+ addContact.Zip.value,
     "phone": addContact.Phone.value.replace(/\D/g,''),
     "occupation": addContact.Occupation.value,
     "avatar": avatarUrl
@@ -50,7 +44,7 @@ function handleAddContact(evt) {
 function updateController(newContact) {
   var appElement = document.querySelector('[ng-app=app]');
   var $scope = angular.element(appElement).scope();
-  $scope = $scope.$$childHead; // add this and it will work
+  $scope = $scope.$$childHead;
   $scope.$apply(function() {
       $scope.people.push(newContact);
   });
@@ -68,11 +62,8 @@ function handleFileUpload(evt) {
      reader.onload = (function(theFile) {
        return function(e) {
          avatarUrl = e.target.result;
-      //    var randomKey = Math.random().toString(36).substr(2, 5);
-      //    localStorage.setItem(randomKey, avatarUrl);
        };
      })(f);
-
      // Read in the image file as a data URL.
      reader.readAsDataURL(f);
    }
@@ -80,34 +71,28 @@ function handleFileUpload(evt) {
 
 app.controller('repoCtrl', function($scope, $http) {
 
+  //track items we removed to keep them from being loaded by external API
+  var DeletedList = JSON.parse(localStorage.getItem('deleted')) || [];
   var mainURL = "https://reqres-api.herokuapp.com/api/users/";
 
   $http.get(mainURL)
     .then(function successAll(response) {
-
-      var allContacts = response.data.concat(localList);
+      var filteredData = response.data.filter(function (obj) { return DeletedList.indexOf(obj.id) < 0;});
+      var allContacts = filteredData.concat(localList);
 
       //capitalize first letter of names being passed to $scope.people
       allContacts.forEach(function(person) {
-        if(DeletedList.indexOf(person.id) > -1) {
-          allContacts.splice(allContacts[person.id - 1], 1);
-        }
-        else {
-          person.first_name = $scope.Capitalize(person.first_name);
-          person.last_name = $scope.Capitalize(person.last_name);
-          person.Number = numContacts;
-          numContacts++;
-        }
+        person.first_name = $scope.Capitalize(person.first_name);
+        person.last_name = $scope.Capitalize(person.last_name);
       });
-
       $scope.people = allContacts;
-      console.log(allContacts);
 
     }, function errorAll(response) {
       console.log(response.statusText);
   });
 
   $scope.ViewAllInfo = function(personID) {
+    //if the data is from external API, it will have an "id" value less than 13.
     if (personID < 13) {
       $http.get(mainURL + personID)
         .then(function successOne(response){
@@ -118,8 +103,9 @@ app.controller('repoCtrl', function($scope, $http) {
       });
    }
    else {
-     var obj = localList.filter(function (obj) { return obj.id === personID;})[0];
-     $scope.ScrubData(obj);
+     //if data is stored locally, find obj in our local listing
+     var localObj = localList.filter(function (obj) { return obj.id === personID;})[0];
+     $scope.ScrubData(localObj);
    }
   }
 
@@ -128,7 +114,7 @@ app.controller('repoCtrl', function($scope, $http) {
     // convert 11 digit numberical value to phone number syntax
     var rawPhoneNum = String(details.phone);
 
-    if(rawPhoneNum.length < 10) { rawPhoneNum.slice(1);}
+    if(rawPhoneNum.length > 10) { rawPhoneNum = rawPhoneNum.slice(rawPhoneNum.length - 10);}
 
     details.phoneNum = rawPhoneNum.substring(0,3) + "-" +
                        rawPhoneNum.substring(3,6) + "-" + rawPhoneNum.substring(6);
@@ -152,7 +138,11 @@ app.controller('repoCtrl', function($scope, $http) {
 
   $scope.RemoveInfo = function(personIndex, personID) {
     var voidContact = $scope.people[personIndex];
+
+    //if locally stored, remove from list
     if(localStorage[personID]) { localStorage.removeItem(personID); }
+
+    //if store externally, block obj from being passed to scope.
     DeletedList.push(voidContact.id);
     localStorage.setItem('deleted', JSON.stringify(DeletedList));
     $scope.people.splice(personIndex, 1);
