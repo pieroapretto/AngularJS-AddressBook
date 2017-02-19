@@ -1,6 +1,6 @@
 html, body {
   padding: 20px 0;
-  background-color: aliceblue;
+  background-color: darkslateblue;
 }
 #detailsView {
   display: none;
@@ -47,6 +47,23 @@ outline: none;
 background-color: none;
 display: inline-block;
 }
-/*#formManager {
- display: none;
-}*/
+input[name=search] {
+  margin: 0;
+}
+.table-responsive, h1 {
+  color: #fff;
+}
+tr:hover {
+  color: #777 !important;
+}
+small {
+  color: darkgray;
+}
+.navbar {
+  background: #fff;
+  color: #777;
+  font-size: 16px;
+}
+.navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
+  color: black !important;
+}

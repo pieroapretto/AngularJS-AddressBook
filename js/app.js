@@ -5,6 +5,7 @@ var img = document.getElementById('tableBanner');
 var addContact = document.getElementById('submitContact');
 var avatarUrl = "";
 var localList = [];
+var allContacts = [];
 
 bannerImg.addEventListener('change', handleFileUpload, false);
 addContact.addEventListener('submit', handleAddContact, false);
@@ -16,6 +17,7 @@ function initLocalData() {
   const keys = Object.keys(localStorage);
   var i = keys.length;
 
+  //upload contacts stored locally
   while (i--) {
      var profilePic = null;
      if (keys[i] !== "deleted") {
@@ -26,6 +28,8 @@ function initLocalData() {
 
 function handleAddContact(evt) {
   var newContact = {
+
+    //give them a random id that does not conflict with ids provide by external API
     "id": Math.floor(Math.random() * (999999 - 13)) + 13,
     "first_name": addContact.firstName.value,
     "last_name": addContact.lastName.value,
@@ -48,6 +52,7 @@ function updateController(newContact) {
   $scope.$apply(function() {
       $scope.people.unshift(newContact);
   });
+  allContacts.unshift(newContact);
 }
 
 function handleFileUpload(evt) {
@@ -74,22 +79,38 @@ app.controller('repoCtrl', function($scope, $http) {
   //track items we removed to keep them from being loaded by external API
   var DeletedList = JSON.parse(localStorage.getItem('deleted')) || [];
   var mainURL = "https://reqres-api.herokuapp.com/api/users/";
+  $scope.searchText = "";
 
   $http.get(mainURL)
     .then(function successAll(response) {
       var filteredData = response.data.filter(function (obj) { return DeletedList.indexOf(obj.id) < 0;});
-      var allContacts = localList.concat(filteredData);
+      allContacts = localList.concat(filteredData);
 
       //capitalize first letter of names being passed to $scope.people
       allContacts.forEach(function(person) {
         person.first_name = $scope.Capitalize(person.first_name);
         person.last_name = $scope.Capitalize(person.last_name);
       });
-      $scope.people = allContacts;
+      $scope.getFilteredContactList();
 
     }, function errorAll(response) {
       console.log(response.statusText);
   });
+
+  $scope.getFilteredContactList = function(){
+    var searchInput = $scope.searchText.trim().toLowerCase();
+
+    // If nothing is the search bar, we want to return all of the contacts
+    if (!searchInput) { $scope.people = allContacts ;}
+
+    // This filter will return a new array of contacts. If searchInput has
+    // an index value in a contact inside allContacts, it will pass through.
+    $scope.people = allContacts.filter(contact => {
+      return (contact.first_name.toLowerCase().search(searchInput) >= 0 ||
+             contact.last_name.toLowerCase().search(searchInput) >= 0);
+    });
+  }
+
 
   $scope.ViewAllInfo = function(personID) {
     //if the data is from external API, it will have an "id" value less than 13.
@@ -124,7 +145,7 @@ app.controller('repoCtrl', function($scope, $http) {
     details.last_name = $scope.Capitalize(details.last_name);
     details.occupation = $scope.Capitalize(details.occupation);
 
-    //remove placeholder text in details DOM element and display detailed information
+    //remove placeholder text in details DOM element and display API information
     document.getElementById('detailsView').style.display = 'block';
     var detailsInstr = document.getElementById('detailsInstr');
     if(detailsInstr){ detailsInstr.parentNode.removeChild(detailsInstr)};
@@ -146,5 +167,6 @@ app.controller('repoCtrl', function($scope, $http) {
     DeletedList.unshift(voidContact.id);
     localStorage.setItem('deleted', JSON.stringify(DeletedList));
     $scope.people.splice(personIndex, 1);
+    allContacts.splice(personIndex, 1);
   }
 });
