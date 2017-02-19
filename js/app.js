@@ -4,6 +4,7 @@ var bannerImg = document.getElementById('bannerImg');
 var img = document.getElementById('tableBanner');
 var addContact = document.getElementById('submitContact');
 var formPanel = document.getElementById('formContainer');
+var previewDIV = document.getElementById('previewContainer');
 var avatarUrl = "";
 var localList = [];
 var allContacts = [];
@@ -28,6 +29,7 @@ function initLocalData() {
 }
 
 function handleAddContact(evt) {
+  if(!avatarUrl) { return false ;}
   var newContact = {
 
     //give them a random id that does not conflict with ids provide by external API
@@ -57,24 +59,26 @@ function updateController(newContact) {
 }
 
 function handleFileUpload(evt) {
-   var files = evt.target.files; // FileList object
+  var files = evt.target.files; // FileList object
 
-   for (var i = 0, f; f = files[i]; i++) {
+  for (var i = 0, f; f = files[i]; i++) {
 
      // Only process image files.
-     if (!f.type.match('image.*')) { continue;}
-
-     var reader = new FileReader();
-     reader.onload = (function(theFile) {
-       return function(e) {
-         avatarUrl = e.target.result;
-         var imgPreview = document.createElement("img");
-         imgPreview.setAttribute("src", avatarUrl);
-         formPanel.insertBefore(imgPreview, formPanel.firstChild);
-       };
-     })(f);
-     // Read in the image file as a data URL.
-     reader.readAsDataURL(f);
+     if (!f.type.match('image.*') || f.type.match('image/gif')) {
+        previewDIV.innerHTML = "<span>Invalid file type</span>"
+        avatarUrl = "";
+     }
+     else {
+       var reader = new FileReader();
+       reader.onload = (function(theFile) {
+         return function(e) {
+           avatarUrl = e.target.result;
+           previewDIV.innerHTML = "<img src='" + avatarUrl + "'/>"
+         };
+       })(f);
+       // Read in the image file as a data URL.
+       reader.readAsDataURL(f);
+     }
    }
  }
 

@@ -1,13 +1,17 @@
 html, body {
   padding: 20px 0;
   background-color: darkslateblue;
+  font-family: "Segoe UI";
+  font-size: 16px;
 }
 #detailsView {
   display: none;
 }
 img {
-  margin: 0;
   width: 128px;
+  margin: 0 0 15px;
+  padding: 0 0 15px;
+  border-bottom: 1px solid #eee;
 }
 #details h3 {
   padding: 0;
@@ -69,11 +73,17 @@ small {
   width: 194px;
 }
 #googleIcon {
+  margin: 10px 0 0 0 !important;
   width: 20px !important;
 }
 #formDivider {
   display: none;
 }
-#formContainer > img {
+#previewContainer > img {
   opacity: 0.7;
+}
+
+#previewContainer > span {
+  color: red;
+  margin-bottom: 10px;
 }

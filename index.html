@@ -39,10 +39,10 @@
               <a class="dropdown-toggle" data-toggle="dropdown" href="#"><div class="panel-heading">Add Contact <span class="caret"></span></div></a>
                 <div class="dropdown-menu">
                   <div class="panel-body" id="formContainer">
-                  <hr id="formDivider">
                   <form name="submitContact" id="submitContact">
+                  <div id="previewContainer"></div>
                   <label class="btn btn-default btn-file">
-                    Add Image..<input name="Avatar" type="file" id="bannerImg" class="custom-file-input" style="display:none" required>
+                    Add Image..<input name="Avatar" type="file" accept="image/png,image/jpeg" id="bannerImg" class="custom-file-input" style="display:none" required>
                   </label>
                   <span id="fileSelected"></span>
                   <br>
@@ -79,7 +79,7 @@
                 </p>
                 <div id="detailsView">
                   <img id="thumbail" src="{{details.avatar}}">
-                  <h3>{{details.first_name}} {{details.last_name}}</h3>
+                  <h3><strong>{{details.first_name}} {{details.last_name}}</strong></h3>
                   <hr>
                   <h4>{{details.occupation}}</h4>
                   <p>{{details.phoneNum}}</p>
