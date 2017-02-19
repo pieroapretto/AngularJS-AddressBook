@@ -30,7 +30,7 @@
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
           <div id="formManager">
             <div class="panel panel-default dropdown">
-              <div class="panel-heading"><span>Search Contacts: </span><input name="search" type="text" ng-model="searchText" ng-change="getFilteredContactList()" class="Address"></div>
+              <div class="panel-heading"><span>Search Contacts:  </span><input name="search" type="text" placeholder="search by name.." ng-model="searchText" ng-change="getFilteredContactList()" class="Address"></div>
             </div>
             <div class="panel panel-default dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#"><div class="panel-heading">Add Contact <span class="caret"></span></div></a>
@@ -39,7 +39,7 @@
                   <form name="submitContact" id="submitContact">
                   <label class="custom-file">
                     <p>Photo</p>
-                    <input name="Avatar" type="file" id="bannerImg" class="custom-file-input"  placeholder=" Picture" required>
+                    <input name="Avatar" type="file" id="bannerImg" class="custom-file-input" required>
                     <span class="custom-file-control"></span>
                   </label>
                     <input name="firstName" type="text" class="firstName"  placeholder=" First Name" required>
