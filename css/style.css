@@ -5,12 +5,13 @@ html, body {
 #detailsView {
   display: none;
 }
-#details img {
-  margin: 0 0 10px 0;
+img {
+  margin: 0;
+  width: 128px;
 }
 #details h3 {
   padding: 0;
-  margin: 0;
+  margin: 0 0 10px 0;
 }
 .thumb {
   width: 128px;
@@ -27,9 +28,6 @@ html, body {
 .panel-heading {
  background-color: #f5f5f5 !important;
  border-color: #ddd !important;
-}
-#thumbail {
- width: 128px;
 }
 input[type=text] {
 font-size: 16px;
@@ -69,4 +67,13 @@ small {
 #submit {
   border-radius: 3px;
   width: 194px;
+}
+#googleIcon {
+  width: 20px !important;
+}
+#formDivider {
+  display: none;
+}
+#formContainer > img {
+  opacity: 0.7;
 }

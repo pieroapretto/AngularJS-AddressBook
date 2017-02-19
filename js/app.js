@@ -3,6 +3,7 @@ var app = angular.module('app', []);
 var bannerImg = document.getElementById('bannerImg');
 var img = document.getElementById('tableBanner');
 var addContact = document.getElementById('submitContact');
+var formPanel = document.getElementById('formContainer');
 var avatarUrl = "";
 var localList = [];
 var allContacts = [];
@@ -67,6 +68,9 @@ function handleFileUpload(evt) {
      reader.onload = (function(theFile) {
        return function(e) {
          avatarUrl = e.target.result;
+         var imgPreview = document.createElement("img");
+         imgPreview.setAttribute("src", avatarUrl);
+         formPanel.insertBefore(imgPreview, formPanel.firstChild);
        };
      })(f);
      // Read in the image file as a data URL.

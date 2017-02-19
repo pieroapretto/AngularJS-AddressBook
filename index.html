@@ -38,7 +38,8 @@
             <div class="panel panel-default dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#"><div class="panel-heading">Add Contact <span class="caret"></span></div></a>
                 <div class="dropdown-menu">
-                  <div class="panel-body">
+                  <div class="panel-body" id="formContainer">
+                  <hr id="formDivider">
                   <form name="submitContact" id="submitContact">
                   <label class="btn btn-default btn-file">
                     Add Image..<input name="Avatar" type="file" id="bannerImg" class="custom-file-input" style="display:none" required>
@@ -82,7 +83,7 @@
                   <hr>
                   <h4>{{details.occupation}}</h4>
                   <p>{{details.phoneNum}}</p>
-                  <p><span><img src="Google-Maps-Icon.png"> <a href="http://maps.google.com/?q={{details.address}}">{{details.address}}</a></span></p>
+                  <p><span><img id="googleIcon" src="Google-Maps-Icon.png"> <a href="http://maps.google.com/?q={{details.address}}">{{details.address}}</a></span></p>
                 </div>
               </div>
             </div>
