@@ -113,7 +113,7 @@ app.controller('repoCtrl', function($scope, $http) {
 
     // This filter will return a new array of contacts. If searchInput has
     // an index value in a contact inside allContacts, it will pass through.
-    $scope.people = allContacts.filter(contact => {
+    $scope.people = allContacts.filter(function(contact) {
       return (contact.first_name.toLowerCase().search(searchInput) >= 0 ||
              contact.last_name.toLowerCase().search(searchInput) >= 0);
     });
