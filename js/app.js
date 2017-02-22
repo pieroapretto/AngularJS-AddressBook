@@ -19,7 +19,7 @@ function initLocalData() {
   const keys = Object.keys(localStorage);
   var i = keys.length;
 
-  //upload contacts stored locally
+  //upload contacts stored to local storage
   while (i--) {
      var profilePic = null;
      if (keys[i] !== "deleted") {
@@ -86,10 +86,10 @@ app.controller('repoCtrl', function($scope, $http) {
 
   //track items we removed to keep them from being loaded by external API
   var DeletedList = JSON.parse(localStorage.getItem('deleted')) || [];
-  var mainURL = "https://reqres-api.herokuapp.com/api/users/";
+  var allUsers = "api/users.json";
   $scope.searchText = "";
 
-  $http.get(mainURL)
+  $http.get(allUsers)
     .then(function successAll(response) {
       var filteredData = response.data.filter(function (obj) { return DeletedList.indexOf(obj.id) < 0;});
       allContacts = localList.concat(filteredData);
@@ -123,12 +123,13 @@ app.controller('repoCtrl', function($scope, $http) {
   $scope.ViewAllInfo = function(personID) {
     //if the data is from external API, it will have an "id" value less than 13.
     if (personID < 13) {
-      $http.get(mainURL + personID)
+      var user = "api/" + personID + ".json";
+      $http.get(user)
         .then(function successOne(response){
           $scope.ScrubData(response.data);
 
         }, function clickError(response) {
-          console.log(response.statusText);
+          console.log(response);
       });
    }
    else {
