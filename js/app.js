@@ -1,9 +1,7 @@
 var app = angular.module('app', []);
 
 var bannerImg = document.getElementById('bannerImg');
-var img = document.getElementById('tableBanner');
 var addContact = document.getElementById('submitContact');
-var formPanel = document.getElementById('formContainer');
 var previewDIV = document.getElementById('previewContainer');
 var avatarUrl = "";
 var localList = [];
@@ -23,7 +21,7 @@ function initLocalData() {
   while (i--) {
      var profilePic = null;
      if (keys[i] !== "deleted") {
-       localList.unshift(JSON.parse(localStorage.getItem(keys[i])));
+       localList.push(JSON.parse(localStorage.getItem(keys[i])));
      }
   }
 }
@@ -31,11 +29,10 @@ function initLocalData() {
 function handleAddContact(evt) {
   if(!avatarUrl) { return false ;}
   var newContact = {
-
-    //give them a random id that does not conflict with ids provide by external API
-    "id": Math.floor(Math.random() * (999999 - 13)) + 13,
+    "id": Date.now(),
     "first_name": addContact.firstName.value,
     "last_name": addContact.lastName.value,
+    "fullName": (addContact.firstName.value + addContact.lastName.value).toLowerCase(),
     "address" : addContact.Address.value +", "+ addContact.City.value +", "+ addContact.State.value +" "+ addContact.Zip.value,
     "phone": addContact.Phone.value.replace(/\D/g,''),
     "occupation": addContact.Occupation.value,
@@ -55,7 +52,6 @@ function updateController(newContact) {
   $scope.$apply(function() {
       $scope.people.unshift(newContact);
   });
-  allContacts.unshift(newContact);
 }
 
 function handleFileUpload(evt) {
@@ -98,27 +94,13 @@ app.controller('repoCtrl', function($scope, $http) {
       allContacts.forEach(function(person) {
         person.first_name = $scope.Capitalize(person.first_name);
         person.last_name = $scope.Capitalize(person.last_name);
+        person.fullName = (person.first_name + person.last_name).toLowerCase();
       });
-      $scope.getFilteredContactList();
+      $scope.people = allContacts;
 
     }, function errorAll(response) {
-      console.log(response.statusText);
+      console.log(response);
   });
-
-  $scope.getFilteredContactList = function(){
-    var searchInput = $scope.searchText.trim().toLowerCase();
-
-    // If nothing is the search bar, we want to return all of the contacts
-    if (!searchInput) { $scope.people = allContacts ;}
-
-    // This filter will return a new array of contacts. If searchInput has
-    // an index value in a contact inside allContacts, it will pass through.
-    $scope.people = allContacts.filter(function(contact) {
-      return (contact.first_name.toLowerCase().search(searchInput) >= 0 ||
-             contact.last_name.toLowerCase().search(searchInput) >= 0);
-    });
-  }
-
 
   $scope.ViewAllInfo = function(personID) {
     //if the data is from external API, it will have an "id" value less than 13.
@@ -146,8 +128,8 @@ app.controller('repoCtrl', function($scope, $http) {
 
     if(rawPhoneNum.length > 10) { rawPhoneNum = rawPhoneNum.slice(rawPhoneNum.length - 10);}
 
-    details.phoneNum = rawPhoneNum.substring(0,3) + "-" +
-                       rawPhoneNum.substring(3,6) + "-" + rawPhoneNum.substring(6);
+    details.phoneNum = rawPhoneNum.substring(0,3) + "-" + rawPhoneNum.substring(3,6)
+                        + "-" + rawPhoneNum.substring(6);
 
     //capitalize first letter in JSON being passed through
     details.first_name = $scope.Capitalize(details.first_name);
@@ -168,7 +150,6 @@ app.controller('repoCtrl', function($scope, $http) {
 
   $scope.RemoveInfo = function(personIndex, personID) {
     var voidContact = $scope.people[personIndex];
-
     //if locally stored, remove from list
     if(localStorage[personID]) { localStorage.removeItem(personID); }
 
@@ -176,6 +157,5 @@ app.controller('repoCtrl', function($scope, $http) {
     DeletedList.unshift(voidContact.id);
     localStorage.setItem('deleted', JSON.stringify(DeletedList));
     $scope.people.splice(personIndex, 1);
-    allContacts.splice(personIndex, 1);
   }
 });
