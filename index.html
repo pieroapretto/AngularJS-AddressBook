@@ -1,11 +1,12 @@
-
 <!DOCTYPE html>
-<html ng-app="app">
+<html lang="en" ng-app="app">
 <head>
-  <title>Address Book</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AngularJS - Address Book</title>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -32,58 +33,58 @@
           <div id="formManager">
 
             <div class="panel panel-default dropdown">
-              <div class="panel-heading"><span>Filter Contacts:  </span><input name="search" type="text" placeholder="search by name.." ng-model="search.fullName" class="Address"></div>
+              <div class="panel-heading"><span>Filter Contacts:  </span><input aria-label="search address book" name="search" type="text" placeholder="search by name.." ng-model="search.fullName" class="Address"></div>
             </div>
 
             <div class="panel panel-default dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#"><div class="panel-heading">Add Contact <span class="caret"></span></div></a>
                 <div class="dropdown-menu">
-                  <div class="panel-body" id="formContainer">
+                  <div role="form" class="panel-body" id="formContainer">
                   <form name="submitContact" id="submitContact">
                   <div id="previewContainer"></div>
-                  <label class="btn btn-default btn-file">
-                    Add Image..<input name="Avatar" type="file" accept="image/png,image/jpeg" id="bannerImg" class="custom-file-input" style="display:none" required>
+                  <label id="upload_image" class="btn btn-default btn-file" alt="upload image">
+                    Add Image..<input aria-labelledby="upload_image" name="Avatar" type="file" accept="image/png,image/jpeg" id="bannerImg" class="custom-file-input" style="display:none" required>
                   </label>
                   <span id="fileSelected"></span>
                   <br>
                   <br>
-                    <input name="firstName" type="text" class="firstName"  placeholder=" First Name" required>
+                    <input aria-label="first name" name="firstName" type="text" class="firstName"  placeholder=" First Name" required>
                   <br>
-                    <input name="lastName" type="text" class="lastName"  placeholder=" Last Name" required>
+                    <input aria-label="last name" name="lastName" type="text" class="lastName"  placeholder=" Last Name" required>
                   <br>
-                    <input name="Occupation" type="text" class="Occupation"  placeholder=" Relationship" required>
+                    <input aria-label="relationship" name="Occupation" type="text" class="Occupation"  placeholder=" Relationship" required>
                   <br>
-                    <input name="Phone" type="text" class="Phone" pattern=".{9,14}" placeholder=" Phone" required>
+                    <input aria-label="phone" name="Phone" type="text" class="Phone" pattern=".{9,14}" placeholder=" Phone" required>
                   <br>
-                    <input name="Address" type="text" class="Address" placeholder=" Street" required>
+                    <input aria-label="address" name="Address" type="text" class="Address" placeholder=" Street" required>
                   <br>
-                    <input name="City" type="text" class="City" placeholder=" City" required>
+                    <input aria-label="city" name="City" type="text" class="City" placeholder=" City" required>
                   <br>
-                    <input name="State" type="text" class="State" pattern=".{2,12}" placeholder=" State" required>
+                    <input aria-label="state" name="State" type="text" class="State" pattern=".{2,12}" placeholder=" State" required>
                   <br>
-                    <input name="Zip" type="text" class="Zip" pattern=".{5,5}"placeholder=" Zip" required>
+                    <input aria-label="zip code" name="Zip" type="text" class="Zip" pattern=".{5,5}"placeholder=" Zip" required>
                   <br>
                   <br>
-                  <input type="submit" value="Submit" class="button" id="submit">
+                  <input role="button" type="submit" value="Submit" class="button" id="submit">
                 </form>
                 </div>
               </div>
             </div>
           </div>
-          <div class="panel panel-default">
+          <div role="contentinfo" class="panel panel-default">
             <div class="panel-heading">Detailed View</div>
             <div class="panel-body">
               <div id="details">
                 <p id="detailsInstr">
                   Click 'View' for Detailed Info
                 </p>
-                <div id="detailsView">
-                  <img id="thumbail" src="{{details.avatar}}">
-                  <h3><strong>{{details.first_name}} {{details.last_name}}</strong></h3>
+                <div role="list" id="detailsView">
+                  <img alt="profile image" id="thumbail" src="{{details.avatar}}">
+                  <h3 role="listitem"><strong>{{details.first_name}} {{details.last_name}}</strong></h3>
                   <hr>
-                  <h4>{{details.occupation}}</h4>
-                  <p>{{details.phoneNum}}</p>
-                  <p><span><img id="googleIcon" src="Google-Maps-Icon.png"> <a href="http://maps.google.com/?q={{details.address}}">{{details.address}}</a></span></p>
+                  <h4 role="listitem">{{details.occupation}}</h4>
+                  <p role="listitem">{{details.phoneNum}}</p>
+                  <p role="listitem"><span><img id="googleIcon" src="Google-Maps-Icon.png"> <a href="http://maps.google.com/?q={{details.address}}">{{details.address}}</a></span></p>
                 </div>
               </div>
             </div>
@@ -101,13 +102,13 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody class="ng-cloak">
-                <tr ng-repeat="person in people | filter: search">
-                  <td><strong>{{people.indexOf(person)+1}}</strong></td>
-                  <td>{{person.first_name}}</td>
-                  <td>{{person.last_name}}</td>
-                  <td><a class="btn btn-default" href="#" ng-click="ViewAllInfo(person.id)">View</a></td>
-                  <td><a class="btn btn-default" href="#" ng-click="RemoveInfo(people.indexOf(person), person.id)">Remove</a></td>
+              <tbody role="main" class="ng-cloak">
+                <tr role="list" ng-repeat="person in people | filter: search">
+                  <td role="listitem"><strong>{{people.indexOf(person)+1}}</strong></td>
+                  <td role="listitem">{{person.first_name}}</td>
+                  <td role="listitem">{{person.last_name}}</td>
+                  <td role="listitem"><a alt="view expanded info" role="button" class="btn btn-default" href="#" ng-click="ViewAllInfo(person.id)">View</a></td>
+                  <td role="listitem"><a alt="remove person" role="button" class="btn btn-default" href="#" ng-click="RemoveInfo(people.indexOf(person), person.id)">Remove</a></td>
                 </tr>
               </tbody>
             </table>

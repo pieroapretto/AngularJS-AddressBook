@@ -26,6 +26,8 @@ function initLocalData() {
   }
 }
 
+// var person = new NewContact(Piero, Pretto, Piero Pretto, 123 Lane, 512-512-5555, Programmer, img);
+
 function handleAddContact(evt) {
   if(!avatarUrl) { return false ;}
   var newContact = {
@@ -78,7 +80,19 @@ function handleFileUpload(evt) {
    }
  }
 
-app.controller('repoCtrl', function($scope, $http) {
+ app.factory('urlBuilder', function($httpParamSerializer) {
+      function buildUrl(url, params) {
+        var serializedParams = $httpParamSerializer(params);
+
+        if (serializedParams.length > 0) {
+            url += ((url.indexOf('?') === -1) ? '?' : '&') + serializedParams;
+        }
+        return url;
+      }
+    return buildUrl;
+  });
+
+app.controller('repoCtrl', function($scope, $http, urlBuilder, $location) {
 
   //track items we removed to keep them from being loaded by external API
   var DeletedList = JSON.parse(localStorage.getItem('deleted')) || [];
@@ -103,12 +117,17 @@ app.controller('repoCtrl', function($scope, $http) {
   });
 
   $scope.ViewAllInfo = function(personID) {
+
     //if the data is from external API, it will have an "id" value less than 13.
     if (personID < 13) {
       var user = "api/" + personID + ".json";
       $http.get(user)
         .then(function successOne(response){
           $scope.ScrubData(response.data);
+          // var customUrl = urlBuilder('http://127.0.0.1:8080/', {first_name: response.data.first_name, occupation: response.data.occupation});
+          // console.log(customUrl);
+          // var newWindow = window.open(customUrl, "_self");
+          // newWindow.document.write('TESTING!!!');
 
         }, function clickError(response) {
           console.log(response);
