@@ -97,13 +97,13 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
+                  <th class="list_headers" ng-click="SortByFirstName()">First Name <span class="caret"></span></th>
+                  <th class="list_headers" ng-click="SortByLastName()">Last Name <span class="caret"></span></th>
                   <th></th>
                 </tr>
               </thead>
               <tbody role="main" class="ng-cloak">
-                <tr role="list" ng-repeat="person in people | filter: search">
+                <tr role="list" class="people_list" ng-repeat="person in people | filter: search">
                   <td role="listitem"><strong>{{people.indexOf(person)+1}}</strong></td>
                   <td role="listitem">{{person.first_name}}</td>
                   <td role="listitem">{{person.last_name}}</td>

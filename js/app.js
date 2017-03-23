@@ -124,12 +124,8 @@ app.controller('repoCtrl', function($scope, $http, urlBuilder, $location) {
       $http.get(user)
         .then(function successOne(response){
           $scope.ScrubData(response.data);
-          // var customUrl = urlBuilder('http://127.0.0.1:8080/', {first_name: response.data.first_name, occupation: response.data.occupation});
-          // console.log(customUrl);
-          // var newWindow = window.open(customUrl, "_self");
-          // newWindow.document.write('TESTING!!!');
-
-        }, function clickError(response) {
+        },
+        function clickError(response) {
           console.log(response);
       });
    }
@@ -141,7 +137,6 @@ app.controller('repoCtrl', function($scope, $http, urlBuilder, $location) {
   }
 
   $scope.ScrubData = function(details) {
-
     // convert 11 digit numberical value to phone number syntax
     var rawPhoneNum = String(details.phone);
 
@@ -165,6 +160,24 @@ app.controller('repoCtrl', function($scope, $http, urlBuilder, $location) {
 
   $scope.Capitalize = function(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  $scope.SortByFirstName = function() {
+    var objsSortedByFirstName = $scope.people.sort(function(a, b) {
+      if(a.first_name < b.first_name) return -1;
+      if(a.first_name > b.first_name) return 1;
+      return 0;
+    });
+    $scope.people = objsSortedByFirstName;
+  }
+
+  $scope.SortByLastName = function() {
+    var objsSortedByLastName = $scope.people.sort(function(a, b) {
+      if(a.last_name < b.last_name) return -1;
+      if(a.last_name > b.last_name) return 1;
+      return 0;
+    });
+    $scope.people = objsSortedByLastName;
   }
 
   $scope.RemoveInfo = function(personIndex, personID) {

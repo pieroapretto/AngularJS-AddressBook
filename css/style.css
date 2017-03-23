@@ -57,8 +57,14 @@ input[name=search] {
 .table-responsive, h1 {
   color: #fff;
 }
-tr:hover {
+.people_list:hover {
   color: #777 !important;
+}
+.list_headers:hover {
+  transform: scale(1.02);
+}
+.btn:hover, .button:hover {
+  transform: scale(1.05);
 }
 small {
   color: darkgray;
