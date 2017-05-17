@@ -48,21 +48,21 @@
                   <span id="fileSelected"></span>
                   <br>
                   <br>
-                    <input aria-label="first name" name="firstName" type="text" class="firstName"  placeholder=" First Name" required>
+                    <input aria-label="first name" name="firstName" type="text" class="firstName" pattern="[A-Za-z]{2,20}" placeholder=" First Name" required>
                   <br>
-                    <input aria-label="last name" name="lastName" type="text" class="lastName"  placeholder=" Last Name" required>
+                    <input aria-label="last name" name="lastName" type="text" class="lastName" pattern="[A-Za-z]{2,20}" placeholder=" Last Name" required>
                   <br>
-                    <input aria-label="relationship" name="Occupation" type="text" class="Occupation"  placeholder=" Relationship" required>
+                    <input aria-label="relationship" name="Occupation" type="text" class="Occupation" pattern="[A-Za-z]{2,20}" placeholder=" Relationship" required>
                   <br>
-                    <input aria-label="phone" name="Phone" type="text" class="Phone" pattern=".{9,14}" placeholder=" Phone" required>
+                    <input aria-label="phone" name="Phone" type="text" class="Phone" pattern="\(?\d{3}\)?[-. ]?\d{3}[-. ]?\d{4}" placeholder=" Phone" required>
                   <br>
-                    <input aria-label="address" name="Address" type="text" class="Address" placeholder=" Street" required>
+                    <input aria-label="address" name="Address" type="text" class="Address" pattern="\d+(\s[A-z0-9]+)?\s[A-z0-9]+.+" placeholder=" Street" required>
                   <br>
-                    <input aria-label="city" name="City" type="text" class="City" placeholder=" City" required>
+                    <input aria-label="city" name="City" type="text" class="City" pattern="[A-Za-z]{2,20}" placeholder=" City" required>
                   <br>
-                    <input aria-label="state" name="State" type="text" class="State" pattern=".{2,12}" placeholder=" State" required>
+                    <input aria-label="state" name="State" type="text" class="State" pattern="[A-Za-z]{2,12}" placeholder=" State" required>
                   <br>
-                    <input aria-label="zip code" name="Zip" type="text" class="Zip" pattern=".{5,5}"placeholder=" Zip" required>
+                    <input aria-label="zip code" name="Zip" type="text" class="Zip" pattern="\d{5}" placeholder=" Zip" required>
                   <br>
                   <br>
                   <input role="button" type="submit" value="Submit" class="button" id="submit">
